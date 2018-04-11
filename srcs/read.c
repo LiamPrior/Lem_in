@@ -6,21 +6,21 @@
 /*   By: lprior <lprior@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/01 20:33:10 by psprawka          #+#    #+#             */
-/*   Updated: 2018/04/05 20:46:21 by lprior           ###   ########.fr       */
+/*   Updated: 2018/04/10 22:11:55 by lprior           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/lemin.h"
 #include <fcntl.h>
-char    *readandstore(void)
+
+char	*readandstore(void)
 {
-	char    *buff;
-	char    *final;
-	
+	char	*buff;
+	char	*final;
+
 	final = "\0";
-	int fd = open("test.txt", O_RDONLY);
 	buff = ft_strnew(BUFF_SIZE);
-	while (read(fd, buff, BUFF_SIZE - 1) > 0)
+	while (read(0, buff, BUFF_SIZE - 1) > 0)
 	{
 		final = ft_strjoin(final, buff);
 		ft_bzero(buff, BUFF_SIZE);
@@ -30,28 +30,31 @@ char    *readandstore(void)
 	return (final);
 }
 
-int        gnl(t_file *file)
+int		gnl(t_file *file)
 {
 	int		size;
 	char	*temp;
-	
+
 	temp = ft_strnew(BUFF_SIZE);
-	file->line = ft_strnew(1);
-	while ((file->map[file->offset] == ' ' || file->map[file->offset] == '\n'
-			|| file->map[file->offset] == '\t') && file->map[file->offset] != '\0')
-		file->offset++;
+	LINE = ft_strnew(1);
+	free(LINE);////////////////////here
 	while (file->map[file->offset] != '\n' && file->map[file->offset] != '\0')
 	{
 		size = 0;
 		while (size < BUFF_SIZE && file->map[file->offset] != '\n' &&
-			   file->map[file->offset] != '\0')
-
+			file->map[file->offset] != '\0')
 			temp[size++] = file->map[file->offset++];
-
-		file->line = ft_strjoin(file->line, temp);
+		LINE = ft_strjoin(LINE, temp);
+		free(temp);///////////////////right here
+		// free(LINE);
 	}
-	if (ft_strcmp(file->line, "\0") == 0)
+	// printf("icn gnl\n");
+	// sleep(15);
+	if (file->map[file->offset] == '\n')
+		file->offset++;
+	if (ft_strcmp(LINE, "\0") == 0 && file->map[file->offset] != '\0')
+		error(12);
+	if (ft_strcmp(LINE, "\0") == 0)
 		return (0);
 	return (1);
 }
-
