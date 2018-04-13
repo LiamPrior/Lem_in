@@ -6,7 +6,7 @@
 /*   By: lprior <lprior@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/01 19:26:01 by psprawka          #+#    #+#             */
-/*   Updated: 2018/04/10 20:45:55 by lprior           ###   ########.fr       */
+/*   Updated: 2018/04/12 12:17:51 by lprior           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ void	make_connect(t_file *file, char *r1, char *r2, int i)
 	}
 }
 
-void	connect(t_file *file)//leaks somewhere in here
+void	connect(t_file *file)
 {
 	char	*room1;
 	char	*room2;
@@ -91,22 +91,15 @@ void	connect(t_file *file)//leaks somewhere in here
 		i = 0;
 		if (comment_command(file) != NULL)
 			error(3);
-		// printf("first sleep\n");
-		// sleep(10);
 		if (if_connect(file, 0) == 0)
 			error(7);
-		// printf("2 sleep\n");
-		// sleep(10);
 		room1 = ft_strncpy(LINE, ft_strlen_chr(LINE, '-'));
-		// printf("3 sleep\n");
-		// sleep(10);
 		while (LINE[i] != '-')
 			i++;
 		i++;
 		room2 = get_name(&(LINE[i]));
 		rooms_exist(file, room1, room2);
 		make_connect(file, room1, room2, -1);
-		free(LINE);//////////////////////
 		if (gnl(file) == 0)
 			break ;
 	}

@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: lprior <lprior@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/04/05 20:17:33 by lprior            #+#    #+#             */
-/*   Updated: 2018/04/05 20:17:43 by lprior           ###   ########.fr       */
+/*   Created: 2018/03/27 12:24:59 by psprawka          #+#    #+#             */
+/*   Updated: 2018/04/12 12:22:17 by lprior           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,100 +17,143 @@
 # include <stdio.h>
 # include <stdbool.h>
 # include <stdlib.h>
+# include "libft.h"
 
 # define BUFF_SIZE 		100
 # define MAX_NAME_LEN 	1000
 # define MAX_PATHS_NB	100000
 # define MAX_ROOMS_NB	100000
 
-# define NORMAL		"\x1B[0m"
-# define RED		"\x1B[31m"
-# define GREEN		"\x1B[32m"
-# define YELLOW		"\x1B[33m"
-# define BLUE		"\x1B[34m"
-# define MAGNETA	"\x1B[35m"
-# define CYAN		"\x1B[36m"
+# define ROOMS			file->rooms
+# define START			file->start
+# define END			file->end
+# define LINE			file->line
+# define PATHS 			file->final_paths
+# define ALL_PATHS 		file->paths
+# define ANTS 			file->ants
 
+# define NORMAL			"\x1B[0m"
+# define RED			"\x1B[31m"
+# define GREEN			"\x1B[32m"
+# define YELLOW			"\x1B[33m"
+# define BLUE			"\x1B[34m"
+# define MAGNETA		"\x1B[35m"
+# define CYAN			"\x1B[36m"
+# define PINK			"\033[38;5;200m"
+# define ORANGE			"\033[38;5;208m"
+# define PURPLE			"\033[38;5;55m"
+# define MAROON			"\033[38;5;88m"
+# define GREY			"\033[38;5;246m"
 
-typedef struct  s_room
+typedef struct	s_room
 {
-    struct s_room   *next;
-    char            *name;
-    int             weight;
+	struct s_room	*next;
+	char			*name;
+	char			*color;
+	int				weight;
 	int				path;
 	int				open;
-    
-}               t_room;
+}				t_room;
 
-typedef struct  s_file
+typedef struct	s_path
 {
-    int             ants;
+	struct s_path	*next;
+	struct s_path	*prev;
+	char			*name;
+	char			*color;
+	int				weight;
+	int				ants;
+	int				nb_ant;
+}				t_path;
+
+typedef struct	s_file
+{
+	int				ants;
+	int				ants2;
 	int				nb_paths;
+	int				nb_fpaths;
 	char			**paths;
-    char            *map;
-    char            *line;
-    struct s_room   **rooms;
+	char			*map;
+	char			*line;
+	struct s_room	**rooms;
+	struct s_path	**final_paths;
 	int				nb_rooms;
-    char            *start;
-    char            *end;
+	char			*start;
+	char			*end;
 	int				offset;
-    
-}               t_file;
+}				t_file;
 
-# define ROOMS			file->rooms
 
-/* libft.c */
-long int	ft_atoi(char *s);
-char    	*ft_itoa(int nbr);
-char		*ft_strjoin(char *s1, char *s2);
-char		*ft_strdup(char *src);
-int			ft_strlen(char *str);
-void    	ft_bzero(void *s, unsigned int n);
-char		*ft_strnew(size_t size);
-void		*ft_memset(void *s, int c, size_t n);
-int			ft_strncmp(char *s1, char *s2, unsigned int n);
-int			ft_strcmp(char *s1, char *s2);
-int			ft_strlen_chr(char *str, char c);
-char		*ft_strncpy(char *str, int size);
-int			ft_strstr(char *str, char *to_find);
 
-/* parse.c */
-char	*get_name(char *line);
-void	get_ants(t_file *file);
-void	comment_command(t_file *file);
-void    parse(t_file *file);
+/*
+**	parse.c
+*/
+void			init(t_file *file);
 
-/* tools.c */
-void	error(void);
+/*
+**	parse.c
+*/
+char			*comment_command(t_file *file);
+char			*get_name(char *line);
+void			get_ants(t_file *file);
+void			ft_parse(t_file *file);
 
-/* connection.c */
-int		if_connect(t_file *file, int i);
-int		check_row(t_file *file, int i, char *to_compare, int w);
-void	add_room(int weight, char *name, t_room *prev);
-void	make_connect(t_file *file, char *r1, char *r2);
-void	connect(t_file *file);
+/*
+**	tools.c
+*/
+void			rooms_exist(t_file *file, char *r1, char *r2);
+void			add_room_path(t_file *file, t_path *head, char *name);
+t_room			*find_room(t_file *file, char *to_find);
+int				room_pos(t_file *file, char *to_find);
 
-/* rooms.c */
-void	rooms(t_file *file);
-int 	if_room(char *line, int i);
+/*
+**	utilities.c
+*/
+void			error(int errno);
+char			*colorsfind(t_file *file, char *command);
 
-/* read.c */
-char    *readandstore(void);
-int		gnl(t_file *file);
+/*
+**	connection.c
+*/
+int				if_connect(t_file *file, int i);
+int				check_row(t_file *file, int i, char *to_compare, int w);
+void			add_room(int weight, char *name, t_room *prev);
+void			make_connect(t_file *file, char *r1, char *r2, int i);
+void			connect(t_file *file);
 
-/* solve.c */
-t_room	*find_room(t_file *file, char *to_find);
-int		room_pos(t_file *file, char *to_find);
-int		find_path(t_file *file, t_room *ptr, int w);
-void	solve(t_file *file);
-void	save_path(t_file *file);
+/*
+**	rooms.c
+*/
+void			rooms(t_file *file, int i);
+int				if_room(char *line, int i);
 
-/* free.c */
-void	free_file(t_file *file);
-void	free_paths(t_file *file);
-void	free_rooms(t_file *file);
+/*
+**	read.c
+*/
+char			*readandstore(void);
+int				gnl(t_file *file);
 
-/* print.c */
-int 	print_path(t_file *file);
+/*
+**	solve.c
+*/
+int				find_path(t_file *file, t_room *ptr, int w);
+void			ft_solve(t_file *file);
+void			save_path(t_file *file);
+
+/*
+**	free.c
+*/
+void			free_file(t_file *file);
+void			free_paths(t_file *file);
+void			free_rooms(t_file *file);
+
+/*
+**	print.c
+*/
+void			move_ants(t_file *file, int cycle, int i, int paths);
+void			display_ants(t_file *file, int cycle, int paths);
+int				print_path(t_file *file);
+void			count_ants(t_file *file, int first_index, int ants, int i);
+void			get_paths(t_file *file, int path, int i);
 
 #endif

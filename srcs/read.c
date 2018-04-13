@@ -6,12 +6,11 @@
 /*   By: lprior <lprior@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/01 20:33:10 by psprawka          #+#    #+#             */
-/*   Updated: 2018/04/10 22:11:55 by lprior           ###   ########.fr       */
+/*   Updated: 2018/04/12 12:18:18 by lprior           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/lemin.h"
-#include <fcntl.h>
 
 char	*readandstore(void)
 {
@@ -37,7 +36,6 @@ int		gnl(t_file *file)
 
 	temp = ft_strnew(BUFF_SIZE);
 	LINE = ft_strnew(1);
-	free(LINE);////////////////////here
 	while (file->map[file->offset] != '\n' && file->map[file->offset] != '\0')
 	{
 		size = 0;
@@ -45,11 +43,7 @@ int		gnl(t_file *file)
 			file->map[file->offset] != '\0')
 			temp[size++] = file->map[file->offset++];
 		LINE = ft_strjoin(LINE, temp);
-		free(temp);///////////////////right here
-		// free(LINE);
 	}
-	// printf("icn gnl\n");
-	// sleep(15);
 	if (file->map[file->offset] == '\n')
 		file->offset++;
 	if (ft_strcmp(LINE, "\0") == 0 && file->map[file->offset] != '\0')

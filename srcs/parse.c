@@ -6,7 +6,7 @@
 /*   By: lprior <lprior@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/27 12:25:23 by psprawka          #+#    #+#             */
-/*   Updated: 2018/04/10 21:25:38 by lprior           ###   ########.fr       */
+/*   Updated: 2018/04/12 12:20:34 by lprior           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,20 +90,16 @@ char	*comment_command(t_file *file)
 	return (NULL);
 }
 
-void	parse(t_file *file)
+void	ft_parse(t_file *file)
 {
 	if (gnl(file) == 0)
 		error(4);
 	comment_command(file);
 	get_ants(file);
-	// printf("5\n");
-	// sleep(5);
 	rooms(file, 0);
-	// printf("30\n");
-	// sleep(30);
 	if (file->ants < 0 || file->ants > 65000)
 		error(1);
 	if (START == NULL || END == NULL)
 		error(2);
-	connect(file);//leaks in here
+	connect(file);
 }

@@ -6,7 +6,7 @@
 /*   By: lprior <lprior@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/01 19:29:20 by psprawka          #+#    #+#             */
-/*   Updated: 2018/04/10 21:25:47 by lprior           ###   ########.fr       */
+/*   Updated: 2018/04/12 12:18:22 by lprior           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,12 +38,8 @@ void	rooms(t_file *file, int i)
 	t_room	*room;
 	char	*color;
 
-
-	// printf("sneaky leak\n");
 	while (gnl(file) != 0)
 	{
-		// printf("sleep after gnl\n");
-		// sleep(10);
 		room = (t_room *)malloc(sizeof(t_room));
 		color = comment_command(file);
 		if (if_room(LINE, 0) == 0)
@@ -53,8 +49,6 @@ void	rooms(t_file *file, int i)
 			error(7);
 		}
 		room->name = get_name(LINE);
-		free(LINE);
-		// sleep(15);
 		room->weight = 0;
 		room->next = NULL;
 		room->color = color == NULL ? NORMAL : color;
